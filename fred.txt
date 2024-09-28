@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- Disable Cache -->
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .dashboard-container {
+            display: none;
+            text-align: center;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .modal-content button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal-content button:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: red;
+            display: none;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <h2>Welcome to the Dashboard</h2>
+    <p>Here is your content!</p>
+</div>
+
+<!-- Modal for session expiry -->
+<div id="sessionExpiredModal" class="modal">
+    <div class="modal-content">
+        <h3>Session Expired</h3>
+        <p>Please re-enter your password to continue.</p>
+        <input type="password" id="reenterPassword" placeholder="Password">
+        <button onclick="restartSession()">Submit</button>
+        <p class="error" id="modal-error-message">Invalid password!</p>
+    </div>
+</div>
+
+<script>
+    const userDetails = {
+        email: "fredrickmuasya37@gmail.com",
+        password: "123"
+    };
+
+    function checkSession() {
+        const sessionActive = localStorage.getItem('sessionActive');
+        const sessionExpiry = localStorage.getItem('sessionExpiry');
+        const sessionExpiredFlag = localStorage.getItem('sessionExpired');
+
+        if (!sessionActive || Date.now() > sessionExpiry || sessionExpiredFlag === 'true') {
+            // Display the session expired modal
+            document.getElementById('sessionExpiredModal').style.display = 'block';
+            localStorage.setItem('sessionExpired', 'true'); // Mark session as expired, even if refreshed
+        } else {
+            // Display the dashboard content
+            document.querySelector('.dashboard-container').style.display = 'block';
+        }
+    }
+
+    function restartSession() {
+        const enteredPassword = document.getElementById('reenterPassword').value;
+
+        if (enteredPassword === userDetails.password) {
+            const sessionExpiry = Date.now() + 120000; // 2 more minutes
+            localStorage.setItem('sessionActive', true);
+            localStorage.setItem('sessionExpiry', sessionExpiry);
+            localStorage.setItem('sessionExpired', 'false'); // Reset the expired flag
+            document.getElementById('sessionExpiredModal').style.display = 'none';
+            document.querySelector('.dashboard-container').style.display = 'block'; // Show content again
+        } else {
+            document.getElementById('modal-error-message').style.display = 'block';
+        }
+    }
+
+    window.onload = function() {
+        const sessionActive = localStorage.getItem('sessionActive');
+        const sessionExpiredFlag = localStorage.getItem('sessionExpired');
+
+        if (!sessionActive && sessionExpiredFlag !== 'true') {
+            window.location.href = 'login.html'; // Redirect to login if no active session
+        } else {
+            checkSession();
+        }
+    };
+
+    setInterval(checkSession, 5000); // Check session every 5 seconds
+</script>
+
+</body>
+</html>
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <!-- Disable Cache -->
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        .login-container h2 {
+            margin-bottom: 20px;
+        }
+
+        .login-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .login-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .login-container button:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: red;
+            display: none;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Login</h2>
+    <form id="loginForm">
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+        <p class="error" id="error-message">Invalid email or password!</p>
+    </form>
+</div>
+
+<script>
+    const userDetails = {
+        email: "fredrickmuasya37@gmail.com",
+        password: "123"
+    };
+
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const enteredEmail = document.getElementById('email').value;
+        const enteredPassword = document.getElementById('password').value;
+
+        if (enteredEmail === userDetails.email && enteredPassword === userDetails.password) {
+            const sessionExpiry = Date.now() + 120000; // 2 minutes
+            localStorage.setItem('sessionActive', true);
+            localStorage.setItem('sessionExpiry', sessionExpiry);
+            window.location.href = 'dashboard.html';
+        } else {
+            document.getElementById('error-message').style.display = 'block';
+        }
+    });
+
+    window.onload = function() {
+        document.getElementById('email').value = '';
+        document.getElementById('password').value = '';
+    };
+</script>
+
+</body>
+</html>

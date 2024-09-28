@@ -60,3 +60,7 @@ document.getElementById('payeForm').addEventListener('submit', function(e) {
        " | Total Tax before relief: KES " + totalTax.toFixed(2) +
        " | PAYE after relief: KES " + paye.toFixed(2);
     });
+
+
+
+

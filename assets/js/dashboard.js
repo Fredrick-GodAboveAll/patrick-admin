@@ -80,3 +80,53 @@ $(function () {
 
 
 })
+
+
+
+const userDetails = {
+  email: "patrick370@gmail.com",
+  password: "patrick?"
+};
+
+function checkSession() {
+  const sessionActive = localStorage.getItem('sessionActive');
+  const sessionExpiry = localStorage.getItem('sessionExpiry');
+  const sessionExpiredFlag = localStorage.getItem('sessionExpired');
+
+  if (!sessionActive || Date.now() > sessionExpiry || sessionExpiredFlag === 'true') {
+      // Display the session expired modal
+      document.getElementById('sessionExpiredModal').style.display = 'block';
+      localStorage.setItem('sessionExpired', 'true'); // Mark session as expired, even if refreshed
+  } else {
+      // Display the dashboard content
+      document.querySelector('.dashboard-container').style.display = 'block';
+  }
+}
+
+function restartSession() {
+  const enteredPassword = document.getElementById('reenterPassword').value;
+
+  if (enteredPassword === userDetails.password) {
+      const sessionExpiry = Date.now() + 120000; // 2 more minutes
+      localStorage.setItem('sessionActive', true);
+      localStorage.setItem('sessionExpiry', sessionExpiry);
+      localStorage.setItem('sessionExpired', 'false'); // Reset the expired flag
+      document.getElementById('sessionExpiredModal').style.display = 'none';
+      document.querySelector('.dashboard-container').style.display = 'block'; // Show content again
+  } else {
+    alert("Invalid password");
+  }
+}
+
+window.onload = function() {
+  const sessionActive = localStorage.getItem('sessionActive');
+  const sessionExpiredFlag = localStorage.getItem('sessionExpired');
+
+  if (!sessionActive && sessionExpiredFlag !== 'true') {
+      window.location.href = 'index.html'; // Redirect to login if no active session
+  } else {
+      checkSession();
+  }
+};
+
+setInterval(checkSession, 5000); // Check session every 5 seconds
