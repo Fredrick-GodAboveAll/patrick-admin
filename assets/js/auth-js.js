@@ -10,7 +10,7 @@ document.getElementById('loginForm').addEventListener('submit', function (e) {
     const enteredPassword = document.getElementById('password').value;
 
     if (enteredEmail === userDetails.email && enteredPassword === userDetails.password) {
-        const sessionExpiry = Date.now() + 120000; // 2 minutes
+        const sessionExpiry = Date.now() + 3600000; // 2 minutes
         localStorage.setItem('sessionActive', true);
         localStorage.setItem('sessionExpiry', sessionExpiry);
         window.location.href = 'dashboard.html';
