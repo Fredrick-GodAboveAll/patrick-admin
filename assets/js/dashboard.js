@@ -107,7 +107,7 @@ function restartSession() {
   const enteredPassword = document.getElementById('reenterPassword').value;
 
   if (enteredPassword === userDetails.password) {
-      const sessionExpiry = Date.now() + 120000; // 2 more minutes
+      const sessionExpiry = Date.now() + 3600000; // 2 more minutes
       localStorage.setItem('sessionActive', true);
       localStorage.setItem('sessionExpiry', sessionExpiry);
       localStorage.setItem('sessionExpired', 'false'); // Reset the expired flag
